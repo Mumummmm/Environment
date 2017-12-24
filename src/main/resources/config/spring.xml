@@ -1,0 +1,41 @@
+<!DOCTYPE beans [
+        <!ELEMENT beans (beans|jdbc:embedded-database|jee:jndi-lookup)*>
+        <!ATTLIST beans
+                profile CDATA #IMPLIED
+                xmlns CDATA #IMPLIED
+                xmlns:jdbc CDATA #IMPLIED
+                xmlns:jee CDATA #IMPLIED
+                xmlns:xsi CDATA #IMPLIED
+                xsi:schemaLocation CDATA #IMPLIED>
+        <!ELEMENT jdbc:embedded-database (jdbc:script)*>
+        <!ATTLIST jdbc:embedded-database
+                id CDATA #REQUIRED>
+        <!ELEMENT jdbc:script (#PCDATA)>
+        <!ATTLIST jdbc:script
+                location CDATA #REQUIRED>
+        <!ELEMENT jee:jndi-lookup (#PCDATA)>
+        <!ATTLIST jee:jndi-lookup
+                id CDATA #REQUIRED
+                jndi-name CDATA #REQUIRED>
+        ]>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd">
+
+    <beans profile="dev" >
+        <jdbc:embedded-database id="dataSource">
+            <jdbc:script location="config/sql/schema.sql"/>
+            <jdbc:script location="config/sql/test-data.sql"/>
+        </jdbc:embedded-database>
+    </beans>
+
+    <beans profile="production">
+        <jee:jndi-lookup id="dataSource2" jndi-name="java:datasource"/>
+    </beans>
+
+    <beans>
+        <import resource="spring.xml"/>
+    </beans>
+</beans>
